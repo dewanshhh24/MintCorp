@@ -1,0 +1,101 @@
+// Wait for DOM to fully load
+document.addEventListener('DOMContentLoaded', function() {
+    // Header scroll effect
+    const header = document.querySelector('header');
+    const mobileToggle = document.querySelector('.mobile-toggle');
+    const nav = document.querySelector('nav ul');
+    
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+    
+    // Mobile menu toggle
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', function() {
+            this.classList.toggle('active');
+            nav.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+    }
+    
+    // Close mobile menu when clicking on a link
+    const navLinks = document.querySelectorAll('nav ul li a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (nav.classList.contains('active')) {
+                mobileToggle.classList.remove('active');
+                nav.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+        });
+    });
+    
+    // Also close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        if (nav.classList.contains('active') && 
+            !event.target.closest('nav') && 
+            !event.target.closest('.mobile-toggle')) {
+            mobileToggle.classList.remove('active');
+            nav.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
+    });
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // Contact form submission
+    const contactForm = document.getElementById('contactForm');
+    const successMessage = document.getElementById('successMessage');
+    
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simulate form submission (replace with actual form submission logic)
+            setTimeout(function() {
+                contactForm.style.display = 'none';
+                successMessage.style.display = 'block';
+            }, 1000);
+        });
+    }
+    
+    // Animations for elements on scroll
+    const animateElements = document.querySelectorAll('.expertise-item, .service-card, .llc-service-item, .contact-item');
+    
+    const checkIfInView = function() {
+        animateElements.forEach(element => {
+            const elementPosition = element.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            
+            if (elementPosition.top < windowHeight * 0.85) {
+                element.classList.add('animate');
+            }
+        });
+    };
+    
+    // Initial check
+    checkIfInView();
+    
+    // Check on scroll
+    window.addEventListener('scroll', checkIfInView);
+}); 
